@@ -44,7 +44,8 @@
       }
 
       /* Input y botones */
-      input[type="number"] {
+      input[type="number"],
+      input[type="date"] {
         width: calc(100% - 20px);
         padding: 12px;
         margin: 10px 0;
@@ -54,7 +55,8 @@
         transition: 0.3s ease;
       }
 
-      input[type="number"]:focus {
+      input[type="number"]:focus,
+      input[type="date"]:focus {
         border-color: #4caf50;
         outline: none;
         box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
@@ -85,23 +87,12 @@
       .result strong {
         color: #4caf50;
       }
-
-      /* Adaptabilidad */
-      @media (max-width: 600px) {
-        h1 {
-          font-size: 1.5rem;
-        }
-        button {
-          width: 100%;
-        }
-      }
     </style>
   </head>
   <body>
     <div class="container">
       <h1>Calculadora de Puntos</h1>
       <p>Meta total: 73,000 puntos</p>
-      <p>Fecha límite: 12 de diciembre</p>
       <form id="pointsForm">
         <label for="currentPoints">Puntos actuales:</label>
         <input
@@ -110,6 +101,8 @@
           placeholder="Ingresa tus puntos actuales"
           required
         />
+        <label for="endDate">Fecha límite:</label>
+        <input type="date" id="endDate" required />
         <button type="submit">Calcular</button>
       </form>
       <div class="result" id="result"></div>
@@ -117,15 +110,24 @@
 
     <script>
       const targetPoints = 73000;
-      const endDate = new Date("2024-12-12");
 
       document
         .getElementById("pointsForm")
         .addEventListener("submit", function (event) {
           event.preventDefault();
+
           const currentPoints = parseInt(
             document.getElementById("currentPoints").value
           );
+          const endDateValue = document.getElementById("endDate").value;
+
+          if (!endDateValue) {
+            document.getElementById("result").textContent =
+              "Por favor, selecciona una fecha válida.";
+            return;
+          }
+
+          const endDate = new Date(endDateValue);
           const today = new Date();
           const daysLeft = Math.ceil((endDate - today) / (1000 * 60 * 60 * 24));
 
